@@ -76,18 +76,25 @@ Parameters:
 page_num = int # Default = 1
 page_size = int # Default = 10
 ```
-```
-URL: GET /users
-
-Parameters:
-page_num = int # Default = 1
-page_size = int # Default = 10
+```json
+Response:
+{
+    "result": true,
+    "users": [
+        {
+            "id": 1,
+            "name": "Suresh Subramaniam",
+            "created_at": 1475820997000000,
+            "updated_at": 1475820997000000,
+        }
+    ]
+}
 ```
 - `GET /users/1` - Retrieve a user by ID
 ```
 URL: GET /users/{id}
 ```
-```
+```json
 Response:
 {
     "result": true,
@@ -107,7 +114,7 @@ Content-Type: application/x-www-form-urlencoded
 Parameters: (All parameters are required)
 name = str
 ```
-```
+```json
 Response:
 {
     "result": true,
@@ -130,7 +137,7 @@ page_num = int # Default = 1
 page_size = int # Default = 10
 user_id = str # Optional. Will only return listings by this user if specified
 ```
-```
+```json
 Response:
 {
     "result": true,
@@ -156,7 +163,7 @@ user_id = int
 listing_type = str
 price = int
 ```
-```
+```json
 Response:
 {
     "result": true,
@@ -181,7 +188,7 @@ page_num = int # Default = 1
 page_size = int # Default = 10
 user_id = str # Optional
 ```
-```
+```json
 {
     "result": true,
     "listings": [
@@ -206,13 +213,13 @@ user_id = str # Optional
 URL: POST /public-api/users
 Content-Type: application/json
 ```
-```
+```json
 Request body: (JSON body)
 {
     "name": "Lorel Ipsum"
 }
 ```
-```
+```json
 Response:
 {
     "user": {
@@ -233,7 +240,7 @@ page_num = int # Default = 1
 page_size = int # Default = 10
 user_id = str # Optional
 ```
-```
+```json
 {
     "result": true,
     "listings": [
@@ -258,7 +265,7 @@ user_id = str # Optional
 URL: POST /public-api/listings
 Content-Type: application/json
 ```
-```
+```json
 Request body: (JSON body)
 {
     "user_id": 1,
@@ -266,7 +273,7 @@ Request body: (JSON body)
     "price": 6000
 }
 ```
-```
+```json
 Response:
 {
     "listing": {
@@ -282,7 +289,7 @@ Response:
 ## 🗄️ Database Schema
 
 ### Users Collection
-```javascript
+```json
 {
   _id: ObjectId,
   id: 1,
@@ -293,7 +300,7 @@ Response:
 ```
 
 ### Properties Collection
-```javascript
+```json
 {
   _id: ObjectId,
   user_id: 1,
