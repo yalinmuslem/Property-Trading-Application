@@ -55,8 +55,7 @@ if __name__ == "__main__":
     
     print(f"🚀 Server running on http://localhost:{Settings.PORT}")
     print("📖 API Documentation:")
-    print(f"   - Listings: http://localhost:{Settings.PORT}/api/listings")
-    print(f"   - Users: http://localhost:{Settings.PORT}/api/users")
-    print(f"   - Health: http://localhost:{Settings.PORT}/api/health")
-    
+    print(f"   - Listings: http://localhost:{Settings.PORT}/public-api/listings")
+    print(f"   - Users: http://localhost:{Settings.PORT}/public-api/users")
+
     tornado.ioloop.IOLoop.current().start()

@@ -1,56 +1,42 @@
 # Property Trading Application
 
-Aplikasi jual beli properti yang dibangun dengan Tornado Python framework. Aplikasi ini memiliki 3 modul utama:
+The property buying and selling application built with Tornado Python Framework.This application has 3 main modules:
 
-## 🏗️ Arsitektur Aplikasi
+## 🏗️ Application architecture
 
 ### 1. **Listing Service** (`services/listing_service.py`)
-- Mengelola CRUD operasi untuk listing properti
-- Filter dan pencarian properti
-- Manajemen status properti (tersedia, terjual, disewa)
-- Pencarian properti berdasarkan lokasi
-- Properti unggulan (featured)
+- Stores all the information about properties that are available to rent and buy
 
 ### 2. **User Service** (`services/user_service.py`)
-- Autentikasi dan autorisasi pengguna
-- Manajemen profil pengguna
-- Role-based access control (Admin, Agent, Buyer, Seller)
-- JWT token management
-- Statistik pengguna
+- Stores information about all the users in the system
 
 ### 3. **Public API Layer** (`api/`)
-- REST API endpoints
-- Request/response handling
-- Error handling dan validasi
-- CORS support
-- API documentation
+- Set of APIs that are exposed to the web/public
 
-## 📁 Struktur Proyek
+## 📁 Project structure
 
 ```
 property_app/
 ├── main.py                 # Entry point aplikasi
 ├── config/
-│   └── settings.py         # Konfigurasi aplikasi
+│   └── settings.py         # Application configuration
 ├── models/
-│   ├── property.py         # Model dan schema properti
-│   └── user.py            # Model dan schema user
+│   ├── property.py         # Property Model and Schema
+│   └── user.py            # User model and schema
 ├── services/
-│   ├── listing_service.py  # Business logic untuk properti
-│   └── user_service.py     # Business logic untuk user
+│   ├── listing_service.py  # Business logic for property
+│   └── user_service.py     # Business logic for users
 ├── api/
-│   ├── base_handler.py     # Base handler dengan utilities
-│   ├── user_handlers.py    # API handlers untuk user
-│   ├── property_handlers.py # API handlers untuk properti
-│   └── routes.py          # Konfigurasi routing
+│   ├── base_handler.py     # Base handler with utilities
+│   ├── user_handlers.py    # API Handlers for User
+│   ├── property_handlers.py # API Handlers for Property
+│   └── routes.py          # Routing configuration
 ├── utils/
-│   ├── auth.py            # Authentication utilities
-│   ├── database.py        # Database connection manager
-│   └── validation.py      # Validation utilities
+│   ├── database.py        # databaseConnectionManager
 └── .env.example           # Template environment variables
 ```
 
-## 🚀 Cara Menjalankan
+## 🚀 Way of running
 
 ### 1. Install Dependencies
 ```bash
@@ -66,101 +52,243 @@ copy .env.example .env
 ```
 
 ### 3. Setup Database
-Pastikan MongoDB sudah terinstall dan berjalan:
+Make sure Mongodb has been installed and running:
 ```bash
-# Default MongoDB connection: mongodb://localhost:27017/property_trading
+# Default MongoDB connection: mongodb://localhost:27017/property_trading_app
 ```
 
-### 4. Jalankan Aplikasi
+### 4. Run the application
 ```bash
 cd property_app
 python main.py
 ```
 
-Aplikasi akan berjalan di: http://localhost:8080
+The application will run on: http://localhost:8080
 
 ## 📚 API Documentation
 
-### Authentication Endpoints
-- `POST /api/auth/register` - Register pengguna baru
-- `POST /api/auth/login` - Login pengguna
-
 ### User Endpoints
-- `GET /api/users/profile` - Get profil user (auth required)
-- `PUT /api/users/profile` - Update profil user (auth required)
-- `PUT /api/users/password` - Ganti password (auth required)
-- `GET /api/users/stats` - Statistik user (auth required)
-- `GET /api/users/my-properties` - Properti milik user (auth required)
+- `GET /users` - Returns all the users available in the db (sorted in descending order of creation date).
+```
+URL: GET /users
+
+Parameters:
+page_num = int # Default = 1
+page_size = int # Default = 10
+```
+```
+URL: GET /users
+
+Parameters:
+page_num = int # Default = 1
+page_size = int # Default = 10
+```
+- `GET /users/1` - Retrieve a user by ID
+```
+URL: GET /users/{id}
+```
+```
+Response:
+{
+    "result": true,
+    "user": {
+        "id": 1,
+        "name": "Suresh Subramaniam",
+        "created_at": 1475820997000000,
+        "updated_at": 1475820997000000,
+    }
+}
+```
+- `POST /users` - Create user
+```
+URL: POST /users
+Content-Type: application/x-www-form-urlencoded
+
+Parameters: (All parameters are required)
+name = str
+```
+```
+Response:
+{
+    "result": true,
+    "user": {
+        "id": 1,
+        "name": "Suresh Subramaniam",
+        "created_at": 1475820997000000,
+        "updated_at": 1475820997000000,
+    }
+}
+```
 
 ### Property Endpoints
-- `GET /api/properties` - List properti dengan filter
-- `POST /api/properties` - Buat listing baru (auth required)
-- `GET /api/properties/{id}` - Detail properti
-- `PUT /api/properties/{id}` - Update properti (owner only)
-- `DELETE /api/properties/{id}` - Hapus properti (owner only)
-- `GET /api/properties/featured` - Properti unggulan
-- `GET /api/properties/nearby` - Pencarian berdasarkan lokasi
-
-### System Endpoints
-- `GET /api/health` - Health check
-- `GET /api/` - API documentation
-
-## 🔐 Authentication
-
-Aplikasi menggunakan JWT (JSON Web Token) untuk autentikasi. Setelah login, sertakan token di header:
-
+- `GET /listings` - Returns all the listings available in the db (sorted in descending order of creation date). Callers can use page_num and page_size to paginate through all the listings available. Optionally, you can specify a user_id to only retrieve listings created by that user.
 ```
-Authorization: Bearer <your-jwt-token>
+URL: GET /listings
+
+Parameters:
+page_num = int # Default = 1
+page_size = int # Default = 10
+user_id = str # Optional. Will only return listings by this user if specified
+```
+```
+Response:
+{
+    "result": true,
+    "listings": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "listing_type": "rent",
+            "price": 6000,
+            "created_at": 1475820997000000,
+            "updated_at": 1475820997000000,
+        }
+    ]
+}
+```
+- `POST /listings` - Create listing
+```
+URL: POST /listings
+Content-Type: application/x-www-form-urlencoded
+
+Parameters: (All parameters are required)
+user_id = int
+listing_type = str
+price = int
+```
+```
+Response:
+{
+    "result": true,
+    "listing": {
+        "id": 1,
+        "user_id": 1,
+        "listing_type": "rent",
+        "price": 6000,
+        "created_at": 1475820997000000,
+        "updated_at": 1475820997000000,
+    }
+}
 ```
 
-## 👥 User Roles
-
-1. **Admin** - Akses penuh ke semua fitur
-2. **Agent** - Dapat membuat dan mengelola listing properti
-3. **Seller** - Dapat membuat dan mengelola listing properti milik sendiri
-4. **Buyer** - Dapat melihat properti dan mengelola profil
-
-## 🔍 Filter dan Pencarian
-
-API mendukung berbagai filter untuk pencarian properti:
-
-- `property_type`: house, apartment, office, land, warehouse
-- `status`: available, sold, rented, pending
-- `min_price` / `max_price`: Range harga
-- `min_area` / `max_area`: Range luas area
-- `bedrooms`: Jumlah kamar tidur
-- `bathrooms`: Jumlah kamar mandi
-- `city`: Nama kota
-- `search`: Pencarian di title/description
-
-### Contoh Request:
+### Public User Endpoints
+- `GET /public-api/users` - Get all the listings available in the system (sorted in descending order of creation date). Callers can use page_num and page_size to paginate through all the listings available. Optionally, you can specify a user_id to only retrieve listings created by that user.
 ```
-GET /api/properties?property_type=house&min_price=500000000&max_price=2000000000&city=Jakarta&page=1&limit=20
-```
+URL: GET /public-api/listings
 
-## 📍 Pencarian Berdasarkan Lokasi
-
+Parameters:
+page_num = int # Default = 1
+page_size = int # Default = 10
+user_id = str # Optional
 ```
-GET /api/properties/nearby?lat=-6.2088&lng=106.8456&radius=10&limit=20
 ```
+{
+    "result": true,
+    "listings": [
+        {
+            "id": 1,
+            "listing_type": "rent",
+            "price": 6000,
+            "created_at": 1475820997000000,
+            "updated_at": 1475820997000000,
+            "user": {
+                "id": 1,
+                "name": "Suresh Subramaniam",
+                "created_at": 1475820997000000,
+                "updated_at": 1475820997000000,
+            },
+        }
+    ]
+}
+```
+- `POST /public-api/users` - Create user
+```
+URL: POST /public-api/users
+Content-Type: application/json
+```
+```
+Request body: (JSON body)
+{
+    "name": "Lorel Ipsum"
+}
+```
+```
+Response:
+{
+    "user": {
+        "id": 1,
+        "name": "Lorel Ipsum",
+        "created_at": 1475820997000000,
+        "updated_at": 1475820997000000,
+    }
+}
+```
+### Property Endpoints
+- `GET /public-api/listings` - Get all the listings available in the system (sorted in descending order of creation date). Callers can use page_num and page_size to paginate through all the listings available. Optionally, you can specify a user_id to only retrieve listings created by that user.
+```
+URL: GET /public-api/listings
 
+Parameters:
+page_num = int # Default = 1
+page_size = int # Default = 10
+user_id = str # Optional
+```
+```
+{
+    "result": true,
+    "listings": [
+        {
+            "id": 1,
+            "listing_type": "rent",
+            "price": 6000,
+            "created_at": 1475820997000000,
+            "updated_at": 1475820997000000,
+            "user": {
+                "id": 1,
+                "name": "Suresh Subramaniam",
+                "created_at": 1475820997000000,
+                "updated_at": 1475820997000000,
+            },
+        }
+    ]
+}
+```
+- `POST /public-api/listings` - Create listing
+```
+URL: POST /public-api/listings
+Content-Type: application/json
+```
+```
+Request body: (JSON body)
+{
+    "user_id": 1,
+    "listing_type": "rent",
+    "price": 6000
+}
+```
+```
+Response:
+{
+    "listing": {
+        "id": 143,
+        "user_id": 1,
+        "listing_type": "rent",
+        "price": 6000,
+        "created_at": 1475820997000000,
+        "updated_at": 1475820997000000,
+    }
+}
+```
 ## 🗄️ Database Schema
 
 ### Users Collection
 ```javascript
 {
   _id: ObjectId,
-  email: String,
-  username: String,
-  password_hash: String,
-  first_name: String,
-  last_name: String,
-  phone: String,
-  role: String, // admin, agent, buyer, seller
-  status: String, // active, inactive, suspended
-  created_at: Date,
-  updated_at: Date,
-  // ... other fields
+  id: 1,
+  name: "Suresh Subramaniam",
+  created_at: 1475820997000000,
+  updated_at: 1475820997000000,
 }
 ```
 
@@ -168,79 +296,35 @@ GET /api/properties/nearby?lat=-6.2088&lng=106.8456&radius=10&limit=20
 ```javascript
 {
   _id: ObjectId,
-  title: String,
-  description: String,
-  property_type: String, // house, apartment, office, land, warehouse
-  status: String, // available, sold, rented, pending
-  price: Number,
-  area: Number,
-  bedrooms: Number,
-  bathrooms: Number,
-  address: Object,
-  coordinates: Object, // {lat: Number, lng: Number}
-  owner_id: ObjectId,
-  created_at: Date,
-  updated_at: Date,
-  views: Number,
-  // ... other fields
+  user_id: 1,
+  listing_type: "rent",
+  price: 6000,
+  created_at: 1475820997000000,
+  updated_at: 1475820997000000,
 }
 ```
 
-## 🔧 Konfigurasi
+## 🔧 Configuration
 
-Semua konfigurasi dapat diatur melalui environment variables atau file `.env`:
+All configurations can be adjusted through the Environment Variables or Files `.env`:
 
 - `PORT`: Port server (default: 8080)
 - `DEBUG`: Mode debug (default: False)
-- `SECRET_KEY`: Secret key untuk JWT
 - `MONGO_HOST`: Host MongoDB
 - `MONGO_PORT`: Port MongoDB
-- `MONGO_DB_NAME`: Nama database
+- `MONGO_DB_NAME`: namaDatabase
 
 ## 🧪 Testing
 
-Untuk testing API, Anda dapat menggunakan tools seperti:
+For fire testing, you can use tools such as:
 - Postman
 - curl
 - HTTPie
 - Insomnia
 
-Contoh menggunakan curl:
-```bash
-# Register user baru
-curl -X POST http://localhost:8080/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "username": "testuser",
-    "password": "password123",
-    "confirm_password": "password123",
-    "first_name": "John",
-    "last_name": "Doe",
-    "role": "seller"
-  }'
-```
-
-## 📝 TODO / Future Enhancements
-
-- [ ] File upload untuk gambar properti
-- [ ] Email verification
-- [ ] SMS verification
-- [ ] Real-time notifications
-- [ ] Advanced search dengan Elasticsearch
-- [ ] Caching dengan Redis
-- [ ] Rate limiting
-- [ ] API versioning
-- [ ] Unit tests
-- [ ] Docker containerization
-
-## 📄 License
-
-MIT License - Silakan gunakan untuk keperluan pembelajaran atau komersial.
-
 ## 👨‍💻 Developer
 
-Dibuat oleh **Yalinulloh** untuk pembelajaran Tornado Python framework.
+Made by ** Yalinulloh ** for excercise Tornado Python Framework.
 
 ---
 
