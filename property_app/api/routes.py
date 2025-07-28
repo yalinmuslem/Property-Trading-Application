@@ -12,5 +12,6 @@ def get_routes():
         (r"/users/([0-9]+)", UserListHandler),        
         (r"/listings", PropertyListHandler),
         (r"/public-api/listings", PropertyListHandler),
-        
+        (r"/public-api/users", UserListHandler),
+
     ]
