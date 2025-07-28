@@ -1,0 +1,14 @@
+# File untuk menyimpan dependency/library Python
+# Format: nama_package==versi (opsional)
+# 
+
+# Tambahkan dependency Anda di bawah ini:
+tornado==6.3.2
+motor==3.3.1  # MongoDB async driver
+pymongo==4.5.0
+bcrypt==4.0.1  # Password hashing
+pyjwt==2.8.0  # JWT tokens
+python-dotenv==1.0.0  # Environment variables
+marshmallow==3.20.1  # Serialization/validation
+redis==4.6.0  # Caching
+aiofiles==23.2.0  # Async file operations

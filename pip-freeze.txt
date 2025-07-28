@@ -1,0 +1,8 @@
+# File ini berisi snapshot dari semua package yang terinstall
+# Dibuat dengan perintah: pip freeze > pip-freeze.txt
+# 
+# Untuk menginstall semua dependency dari file ini:
+# pip install -r pip-freeze.txt
+#
+# File ini akan diisi secara otomatis ketika Anda menjalankan:
+# pip freeze > pip-freeze.txt

@@ -1,0 +1,26 @@
+# Environment variables - NEVER commit these!
+.env
+
+# Local development database
+*.db
+*.sqlite
+
+# Log files
+*.log
+logs/
+
+# Upload directories (will contain user uploaded images)
+uploads/
+media/
+
+# Temporary files
+*.tmp
+tmp/
+
+# IDE files
+.vscode/settings.json
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
