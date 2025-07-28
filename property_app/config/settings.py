@@ -14,7 +14,7 @@ class Settings:
     DEBUG = os.getenv("DEBUG", "False").lower() == "true"
     
     # Security
-    SECRET_KEY = os.getenv("SECRET_KEY", "a83991a9-fb6a-4a29-b822-cc3a757b2051")
+    SECRET_KEY = os.getenv("SECRET_KEY", "***")
     JWT_ALGORITHM = "HS256"
     JWT_EXPIRATION_HOURS = 24
     
